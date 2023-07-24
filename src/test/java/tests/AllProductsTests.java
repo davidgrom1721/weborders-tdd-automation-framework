@@ -9,25 +9,66 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import pages.AllOrdersPage;
+import pages.AllProductsPage;
+import pages.LoginPage;
+import utils.ConfigReader;
+import utils.Driver;
+import utils.SeleniumUtils;
 
 import java.time.Duration;
+import java.util.List;
 
 public class AllProductsTests extends TestBase{
 
 
 
-    @Test
+    @Test(groups = {"smoke"})
     public void verifyDeleteSelectedButton(){
 
-        driver.get("http://secure.smartbearsoftware.com/samples/testcomplete12/weborders/");
-        String username = "Tester";
-        String pass = "test";
-        driver.findElement(By.id("ctl00_MainContent_username")).sendKeys(username, Keys.TAB, pass, Keys.ENTER);
+        new LoginPage().loginWithValidCredentials();
 
-        driver.findElement(By.linkText("View all products")).click();
-        WebElement element = driver.findElement(By.tagName("h2"));
+        Driver.getDriver().findElement(By.linkText("View all products")).click();
+        WebElement element = Driver.getDriver().findElement(By.tagName("h2"));
         Assert.assertTrue(element.isDisplayed());
     }
+
+
+    @Test
+    public void verifyTableColumns(){
+        new LoginPage().loginWithValidCredentials();
+        List<String> expectedList = List.of("Product name", "Price", "Discount");
+
+        new AllOrdersPage().getViewAllProductsLink().click();
+
+        AllProductsPage allProductsPage = new AllProductsPage();
+
+        List<String> actual = SeleniumUtils.getElementsText(allProductsPage.getHeaderCells());
+
+        Assert.assertEquals(actual, expectedList);
+
+
+
+
+    }
+
+    @Test
+    public void verifyProductNames(){
+
+        new LoginPage().loginWithValidCredentials();
+        List<String> expectedList = List.of("MyMoney", "FamilyAlbum", "ScreenSaver");
+
+        new AllOrdersPage().getViewAllProductsLink().click();
+
+        List<String> actual = SeleniumUtils.getElementsText(new AllProductsPage().getProductNameCells());
+
+        Assert.assertEquals(actual, expectedList);
+
+
+    }
+
+
+
 
 
 }
