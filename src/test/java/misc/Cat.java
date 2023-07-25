@@ -23,6 +23,10 @@ public class Cat {
        // User story branch changes
         System.out.println("User story branch");
 
+        // User Story 2
+
+        System.out.println("User story 2");
+
     }
 
 
